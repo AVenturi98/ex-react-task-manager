@@ -5,7 +5,9 @@ import TaskRow from "../components/TaskRow";
 
 export default function TaskList() {
 
-    const { task } = useContext(GlobalContext);
+    const { tasks } = useContext(GlobalContext);
+
+    console.log(tasks)
 
 
 
@@ -20,7 +22,7 @@ export default function TaskList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {task.map(e => (
+                    {tasks.map(e => (
                         <TaskRow key={e.id} item={e} />
                     ))}
                 </tbody>
