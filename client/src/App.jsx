@@ -3,24 +3,31 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 //Layout 
 import DefaultLayout from './layout/DefaultLayout';
 
-//components
+//Context
+import { GlobalProvider } from './context/GlobalContext';
+
+//Components
 import TaskList from './pages/TaskList';
 import AddTask from './pages/AddTask';
+
+
 
 
 function App() {
 
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<DefaultLayout />}>
-          <Route index element={<TaskList />} />
-          <Route path='add' element={<AddTask />} />
+    <GlobalProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element={<DefaultLayout />}>
+            <Route index element={<TaskList />} />
+            <Route path='add' element={<AddTask />} />
 
-        </Route>
-      </Routes>
-    </BrowserRouter>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </GlobalProvider>
   )
 }
 
