@@ -6,8 +6,8 @@ const TaskRow = React.memo(({ item }) => {
 
     const statusStyle = {
         color: status === "To do" ? "red" :
-            "Doing" ? "yellow" :
-                "Done" ? "green" : "currentColor"
+            status === "Doing" ? "orange" :
+                status === "Done" ? "green" : "",
     };
 
     return (

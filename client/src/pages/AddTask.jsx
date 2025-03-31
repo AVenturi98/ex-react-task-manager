@@ -1,6 +1,9 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useContext } from "react";
+import GlobalContext from "../context/GlobalContext";
 
 export default function AddTask() {
+
+    const { addTask } = useContext(GlobalContext);
 
     const [title, setTitle] = useState('');
     const description = useRef();
@@ -18,7 +21,7 @@ export default function AddTask() {
         return ''
     }, [title])
 
-    function submitForm(e) {
+    async function submitForm(e) {
         e.preventDefault();
 
         if (taskErrore)
@@ -30,7 +33,16 @@ export default function AddTask() {
             status: status.current.value,
         }
 
-        console.log(newTask)
+        try {
+            await addTask(newTask);
+            setTitle('');
+            description.current.value = '';
+            status.current.value = 'To do';
+            alert('Task added successfully');
+
+        } catch (err) {
+            alert(err.message)
+        }
 
     }
 

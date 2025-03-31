@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 export function useTask() {
     const URL_API = 'http://localhost:3001';
@@ -8,34 +7,55 @@ export function useTask() {
 
     async function fetchTasks() {
         try {
-            await axios.get(`${URL_API}/tasks`)
-                .then(res => {
-                    setTasks(res.data)
-                    // console.log(res.data)
-                })
-                .catch(err => console.error(err))
-        } catch {
-            err => console.error(err)
+            const response = await fetch(`${URL_API}/tasks`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            setTasks(data);
+        } catch (err) {
+            console.error("Failed to fetch tasks:", err);
         }
     }
 
     useEffect(() => {
-        fetchTasks()
-    }, [])
+        fetchTasks();
+    }, []);
 
-    function addTask() {
+    async function addTask(newTask) {
+        try {
+            const response = await fetch(`${URL_API}/tasks`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newTask),
+            });
 
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const { success, message, task } = await response.json();
+
+            if (!success) {
+                throw new Error(message);
+            }
+
+            // Aggiungi il nuovo task alla lista senza ricaricare la pagina
+            setTasks((prev) => [...prev, task]);
+        } catch (err) {
+            console.error("Failed to add task:", err);
+        }
     }
 
     function removeTask() {
-
+        // Implementazione futura
     }
 
     function updateTask() {
-
+        // Implementazione futura
     }
 
-    return { tasks, addTask, removeTask, updateTask }
+    return { tasks, addTask, removeTask, updateTask };
 }
 
-export default useTask
+export default useTask;

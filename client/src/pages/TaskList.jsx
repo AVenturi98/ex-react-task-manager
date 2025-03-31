@@ -7,10 +7,6 @@ export default function TaskList() {
 
     const { tasks } = useContext(GlobalContext);
 
-    console.log(tasks)
-
-
-
     return (
         <>
             <table>
