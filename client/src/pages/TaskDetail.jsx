@@ -1,11 +1,12 @@
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import GlobalContext from "../context/GlobalContext";
 import { useContext } from "react";
 
 export default function TaskDetail() {
 
-    const { tasks } = useContext(GlobalContext);
+    const { tasks, removeTask } = useContext(GlobalContext);
     const { id } = useParams();
+    const navigate = useNavigate();
 
     const task = tasks.find(e => e.id === parseInt(id));
 
@@ -13,8 +14,15 @@ export default function TaskDetail() {
         return <p>Loading task details...</p>;
     }
 
-    function handleDelete() {
-        console.log("deleted item with id:", id)
+    async function handleDelete() {
+        try {
+            await removeTask(task.id);
+            alert('Task deleted successfully');
+            navigate('/')
+        } catch (err) {
+            console.error("Error deleting task:", err);
+
+        }
     }
 
     const statusStyle = {

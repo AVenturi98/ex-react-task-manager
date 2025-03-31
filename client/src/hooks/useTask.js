@@ -22,6 +22,7 @@ export function useTask() {
         fetchTasks();
     }, []);
 
+    // Aggingi Task
     async function addTask(newTask) {
         try {
             const response = await fetch(`${URL_API}/tasks`, {
@@ -47,10 +48,25 @@ export function useTask() {
         }
     }
 
-    function removeTask() {
-        // Implementazione futura
+    // Rimuovi Task
+    async function removeTask(id) {
+        try {
+            const response = await fetch(`${URL_API}/tasks/${id}`, {
+                method: "DELETE",
+            })
+
+            const { success, message } = await response.json();
+            if (!success) {
+                throw new Error(`Error! message: ${message}`);
+            }
+
+            setTasks((prev) => prev.filter((task) => task.id !== id));
+        } catch (err) {
+            console.error("Failed to remove task:", err);
+        }
     }
 
+    // Modifica Task
     function updateTask() {
         // Implementazione futura
     }
@@ -58,4 +74,4 @@ export function useTask() {
     return { tasks, addTask, removeTask, updateTask };
 }
 
-export default useTask;
+export default useTask
