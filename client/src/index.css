@@ -40,8 +40,9 @@ h1 {
 
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 20px;
   padding: 0.5rem 1rem;
   background-color: #354253;
 }

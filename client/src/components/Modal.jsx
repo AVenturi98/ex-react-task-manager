@@ -11,7 +11,7 @@ const Modal = ({ title, content, show, onClose, onConfirm, confirmText = "Confer
                 <div style={styles.content}>{content}</div>
                 <div style={styles.actions}>
                     <button style={styles.cancelButton} onClick={onClose}>
-                        Cancel
+                        Annulla
                     </button>
                     <button style={styles.confirmButton} onClick={onConfirm}>
                         {confirmText}

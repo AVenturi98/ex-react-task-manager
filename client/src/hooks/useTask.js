@@ -67,8 +67,27 @@ export function useTask() {
     }
 
     // Modifica Task
-    function updateTask() {
-        // Implementazione futura
+    async function updateTask(updatedTask) {
+        try {
+            const response = await fetch(`${URL_API}/tasks/${updatedTask.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedTask)
+            });
+
+            const { success, message, task: newTask } = await response.json();
+            if (!success) {
+                throw new Error(`Error! message: ${message}`);
+            };
+
+            setTasks(prev => prev.map(
+                oldTask => oldTask.id === newTask.id ? newTask : oldTask
+            ))
+
+        } catch (err) {
+            console.error(`ERROR: ${err}`)
+        }
+
     }
 
     return { tasks, addTask, removeTask, updateTask };
