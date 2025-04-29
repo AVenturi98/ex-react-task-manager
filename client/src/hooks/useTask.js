@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
+import taskReducer from "../reducers/taskReducer";
 
 export function useTask() {
     const URL_API = 'http://localhost:3001';
 
-    const [tasks, setTasks] = useState([]);
+    const [tasks, dispatchTasks] = useReducer(taskReducer, []);
 
     async function fetchTasks() {
         try {
@@ -12,7 +13,8 @@ export function useTask() {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            setTasks(data);
+            //setTasks(data); 
+            dispatchTasks({ type: "LOAD_TASKS", payload: data });
         } catch (err) {
             console.error("Failed to fetch tasks:", err);
         }
@@ -47,7 +49,8 @@ export function useTask() {
             }
 
             // Aggiungi il nuovo task alla lista senza ricaricare la pagina
-            setTasks((prev) => [...prev, task]);
+            // setTasks((prev) => [...prev, task]);
+            dispatchTasks({ type: "ADD_TASK", payload: task });
         } catch (err) {
             console.error("Failed to add task:", err);
         }
@@ -65,7 +68,8 @@ export function useTask() {
                 throw new Error(`Error! message: ${message}`);
             }
 
-            setTasks((prev) => prev.filter((task) => task.id !== id)); // Rimuovi il task dalla lista senza ricaricare la pagina
+            // setTasks((prev) => prev.filter((task) => task.id !== id)); // Rimuovi il task dalla lista senza ricaricare la pagina
+            dispatchTasks({ type: "REMOVE_TASK", payload: id })
         } catch (err) {
             console.error("Failed to remove task:", err);
         }
@@ -85,9 +89,10 @@ export function useTask() {
                 throw new Error(`Error! message: ${message}`);
             };
 
-            setTasks(prev => prev.map(
-                oldTask => oldTask.id === newTask.id ? newTask : oldTask
-            ))
+            dispatchTasks({ type: "UPDATE_TASK", payload: newTask })
+            // setTasks(prev => prev.map(
+            //     oldTask => oldTask.id === newTask.id ? newTask : oldTask
+            // ))
 
         } catch (err) {
             console.error(`ERROR: ${err}`)
@@ -120,7 +125,8 @@ export function useTask() {
         });
 
         if (successfulDeletes.length > 0) {
-            setTasks(prev => prev.filter(task => !successfulDeletes.includes(task.id))); // Update the state to remove the successfully deleted tasks
+            dispatchTasks({ type: "REMOVE_MULTIPLE_TASKS", payload: successfulDeletes })
+            // setTasks(prev => prev.filter(task => !successfulDeletes.includes(task.id))); // Update the state to remove the successfully deleted tasks
         }
         if (failedDeletes.length > 0) {
             throw new Error(`Failed to delete tasks with IDs: ${failedDeletes.join(', ')}`); // Throw an error with the failed task IDs
