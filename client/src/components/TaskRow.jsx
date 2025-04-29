@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router";
 
-const TaskRow = React.memo(({ item }) => {
+const TaskRow = React.memo(({ item, checked, onToggle = () => { } }) => {
 
     const { id, title, status, createdAt } = item;
 
@@ -13,7 +13,14 @@ const TaskRow = React.memo(({ item }) => {
 
     return (
         <tr>
-            <td>
+            <td style={{ display: "flex", alignItems: "center" }}>
+
+                <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() => onToggle(id)}
+                    style={{ marginRight: "15px" }} />
+
                 <Link to={`/task/${id}`}>
                     {title}
                 </Link>

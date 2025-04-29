@@ -60,7 +60,7 @@ export function useTask() {
                 throw new Error(`Error! message: ${message}`);
             }
 
-            setTasks((prev) => prev.filter((task) => task.id !== id));
+            setTasks((prev) => prev.filter((task) => task.id !== id)); // Rimuovi il task dalla lista senza ricaricare la pagina
         } catch (err) {
             console.error("Failed to remove task:", err);
         }
@@ -90,7 +90,40 @@ export function useTask() {
 
     }
 
-    return { tasks, addTask, removeTask, updateTask };
+
+    // Rimuovi tasks multipli
+    async function removeMultipleTasks(taskIds) {
+        const deleteRequests = taskIds.map(async id => {
+            await fetch(`${URL_API}/tasks/${id}`, { method: 'DELETE' })
+                .then(res => res.json())
+
+        })
+
+        const result = await Promise.allSettled(deleteRequests); // Wait for all delete requests to settle
+        //result is an array of objects with status and value properties
+
+        const successfulDeletes = []; //array for successful deletes
+        const failedDeletes = []; //array for failed deletes
+
+        // Loop through the results and separate successful and failed deletes
+        result.forEach((res, index) => {
+            if (res.status === 'fulfilled') {
+                successfulDeletes.push(taskIds[index]); // Add the task ID to the successful deletes array
+            } else {
+                failedDeletes.push(taskIds[index]); // Add the task ID to the failed deletes array
+            }
+        });
+
+        if (successfulDeletes.length > 0) {
+            setTasks(prev => prev.filter(task => !successfulDeletes.includes(task.id))); // Update the state to remove the successfully deleted tasks
+        }
+        if (failedDeletes.length > 0) {
+            throw new Error(`Failed to delete tasks with IDs: ${failedDeletes.join(', ')}`); // Throw an error with the failed task IDs
+        }
+    }
+
+
+    return { tasks, addTask, removeTask, updateTask, removeMultipleTasks };
 }
 
 export default useTask

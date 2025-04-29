@@ -127,6 +127,14 @@ button {
   z-index: 99;
 }
 
+.cancelButton {
+  background-color: "#ccc";
+  border: "none";
+  padding: "10px 20px";
+  border-radius: "5px";
+  cursor: "pointer";
+}
+
 .searchInput {
   margin: 10px;
 }
