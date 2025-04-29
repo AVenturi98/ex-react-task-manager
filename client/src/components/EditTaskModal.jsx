@@ -35,6 +35,7 @@ export default function EditTaskModal({
                             <input
                                 style={{ width: "100%" }}
                                 type="text"
+                                maxLength={100}
                                 value={title}
                                 onChange={e => changeEditedTask('title', e)}
                             />

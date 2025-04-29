@@ -18,6 +18,9 @@ export default function AddTask() {
         if ([...title].some(e => symbols.includes(e))) {
             return 'Title cannot contain special characters'
         }
+        if (title.length <= 2) {
+            return 'Title required 3 character min'
+        }
         return ''
     }, [title])
 
@@ -52,16 +55,18 @@ export default function AddTask() {
             <input
                 type="text"
                 placeholder="Title"
+                maxLength={100}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
             />
             {taskErrore &&
-                <div className="error">{taskErrore}</div>
+                < div className="error">{taskErrore}</div>
             }
             <h2>Description</h2>
             <input
                 type="textarea"
                 placeholder="Descrizione"
+                maxLength={200}
                 ref={description}
             />
             <h2>Status</h2>
@@ -78,6 +83,6 @@ export default function AddTask() {
                 disabled={taskErrore}>
                 Aggiungi
             </button>
-        </form>
+        </form >
     )
 }

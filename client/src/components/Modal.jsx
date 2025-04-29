@@ -41,7 +41,7 @@ const styles = {
         backgroundColor: "#fff",
         padding: "20px",
         borderRadius: "8px",
-        width: "400px",
+        width: "95%",
         boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
         textAlign: "center",
     },
