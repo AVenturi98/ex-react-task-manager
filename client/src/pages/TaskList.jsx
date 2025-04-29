@@ -2,6 +2,7 @@ import { useContext, useState, useMemo, useRef, useCallback } from "react";
 import GlobalContext from "../context/GlobalContext";
 // Components
 import TaskRow from "../components/TaskRow";
+import Modal from "../components/Modal";
 
 const debounce = (callback, delay) => {
     let timer;
@@ -33,6 +34,12 @@ export default function TaskList() {
 
     // State for selected task
     const [selectedTaskIds, setSelectedTaskIds] = useState([]);
+    const [selectedButton, setSelectedButton] = useState(true);
+
+
+    // Modal confirm deleted selectedTaskIds
+    const [isOpen, setIsOpen] = useState(false);
+
 
 
     // Sort function
@@ -83,6 +90,11 @@ export default function TaskList() {
         }
     }
 
+    const handleClose = () => {
+        setIsOpen(false);
+        setSelectedTaskIds([])
+    }
+
     const handleDelete = async () => {
         try {
             await removeMultipleTasks(selectedTaskIds);
@@ -107,13 +119,40 @@ export default function TaskList() {
                         ref={searchRef}
                         style={{ margin: "20px 0" }}
                     />
-                    {selectedTaskIds.length >= 1 &&
+                    {selectedButton ?
                         <button
                             type="button"
-                            onClick={handleDelete}
-                            style={{ backgroundColor: "red" }}>
-                            Elimina
-                        </button>}
+                            onClick={() => setSelectedButton(false)}>
+                            Seleziona
+                        </button>
+                        : !selectedButton && !selectedTaskIds.length >= 1 ?
+                            <button
+                                type="button"
+                                onClick={() => setSelectedButton(true)}
+                                style={{ backgroundColor: "#ccc" }}>
+                                Annulla
+                            </button>
+                            : selectedTaskIds.length >= 1 && !selectedButton &&
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsOpen(true)}
+                                    style={{ backgroundColor: "red" }}>
+                                    Elimina
+                                </button>
+
+                                <Modal
+                                    content={<div>
+                                        Sei sicuro di voler <strong style={{ color: "red", textDecoration: "underline" }}>eliminare</strong> le tasks selezionate?
+                                        <br />
+                                        <p>selezionate {selectedTaskIds.length}</p>
+                                    </div>}
+                                    show={isOpen}
+                                    onClose={handleClose}
+                                    onConfirm={handleDelete}
+                                    confirmText="Cancella"
+                                />
+                            </>}
                 </div>
             </div>
 
@@ -133,7 +172,7 @@ export default function TaskList() {
                 </thead>
                 <tbody>
                     {sortedTasks.map(e => (
-                        <TaskRow key={e.id} item={e} onToggle={toggleSelection} checked={selectedTaskIds.includes(e.id)} />
+                        <TaskRow key={e.id} item={e} onToggle={toggleSelection} checked={selectedTaskIds.includes(e.id)} show={!selectedButton} />
                     ))}
                 </tbody>
 

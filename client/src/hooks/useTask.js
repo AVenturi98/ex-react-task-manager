@@ -24,6 +24,11 @@ export function useTask() {
 
     // Aggingi Task
     async function addTask(newTask) {
+        const exists = tasks.some(t => t.title === newTask.title); // Controlla se il task esiste già
+        if (exists) {
+            alert(`Task "${newTask.title}" already exists!`);
+            return;
+        }
         try {
             const response = await fetch(`${URL_API}/tasks`, {
                 method: "POST",

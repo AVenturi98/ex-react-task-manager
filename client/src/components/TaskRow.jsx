@@ -2,9 +2,9 @@ import * as React from "react";
 import { Link } from "react-router";
 import GlobalContext from "../context/GlobalContext";
 
-const TaskRow = React.memo(({ item, checked, onToggle = () => { } }) => {
+const TaskRow = React.memo(({ item, checked, onToggle = () => { }, show = true }) => {
 
-    const { id, title, status, createdAt } = item;
+    const { id, title, status } = item;
 
     const { dateFormat } = React.useContext(GlobalContext)
 
@@ -18,11 +18,13 @@ const TaskRow = React.memo(({ item, checked, onToggle = () => { } }) => {
         <tr>
             <td style={{ display: "flex", alignItems: "center" }}>
 
-                <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={() => onToggle(id)}
-                    style={{ marginRight: "15px" }} />
+                {show &&
+                    <input
+                        type="checkbox"
+                        checked={checked}
+                        show={show.value}
+                        onChange={() => onToggle(id)}
+                        style={{ marginRight: "15px" }} />}
 
                 <Link to={`/task/${id}`}>
                     {title}

@@ -17,8 +17,28 @@ export default function EditTaskModal({
 
     const { title, description, status } = editedTask;
 
+
+    const symbols = '!@#$%^&*()-_=+[]{}|;:\'\\,.<>?/`~';
+
+    const taskErrore = React.useMemo(() => {
+        if (!title.trim()) {
+            return 'Title is required'
+        }
+        if ([...title].some(e => symbols.includes(e))) {
+            return 'Title cannot contain special characters'
+        }
+        if (title.length <= 2) {
+            return 'Title required 3 character min'
+        }
+        return ''
+    }, [title])
+
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        if (taskErrore)
+            return;
+
         onSave(editedTask)
     }
 
@@ -39,6 +59,8 @@ export default function EditTaskModal({
                                 value={title}
                                 onChange={e => changeEditedTask('title', e)}
                             />
+                            {taskErrore &&
+                                < div className="error">{taskErrore}</div>}
                         </label>
                         <label>
                             <strong>

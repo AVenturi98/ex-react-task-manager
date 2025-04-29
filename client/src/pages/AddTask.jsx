@@ -3,7 +3,7 @@ import GlobalContext from "../context/GlobalContext";
 
 export default function AddTask() {
 
-    const { addTask } = useContext(GlobalContext);
+    const { addTask, tasks } = useContext(GlobalContext);
 
     const [title, setTitle] = useState('');
     const description = useRef();
@@ -37,11 +37,16 @@ export default function AddTask() {
         }
 
         try {
-            await addTask(newTask);
-            setTitle('');
-            description.current.value = '';
-            status.current.value = 'To do';
-            alert('Task added successfully');
+            if (tasks.filter(t => t.title.toLowerCase() === newTask.title.toLowerCase()).length > 0) {
+                alert('Task already exists!')
+                return;
+            } else {
+                await addTask(newTask);
+                setTitle('');
+                description.current.value = '';
+                status.current.value = 'To do';
+                alert('Task added successfully');
+            }
 
         } catch (err) {
             alert(err.message)
