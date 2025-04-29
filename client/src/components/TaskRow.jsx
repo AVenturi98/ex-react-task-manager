@@ -1,9 +1,12 @@
 import * as React from "react";
 import { Link } from "react-router";
+import GlobalContext from "../context/GlobalContext";
 
 const TaskRow = React.memo(({ item, checked, onToggle = () => { } }) => {
 
     const { id, title, status, createdAt } = item;
+
+    const { dateFormat } = React.useContext(GlobalContext)
 
     const statusStyle = {
         color: status === "To do" ? "red" :
@@ -26,7 +29,7 @@ const TaskRow = React.memo(({ item, checked, onToggle = () => { } }) => {
                 </Link>
             </td>
             <td style={statusStyle}>{status}</td>
-            <td>{new Date(createdAt).toLocaleDateString()}</td>
+            <td>{dateFormat}</td>
         </tr>
     )
 })

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router";
 import GlobalContext from "../context/GlobalContext";
-import { useContext, useReducer, useState } from "react";
+import { useContext, useState } from "react";
 
 // Components
 import Modal from "../components/Modal";
@@ -8,13 +8,15 @@ import EditTaskModal from "../components/EditTaskModal";
 
 export default function TaskDetail() {
 
-    const { tasks, removeTask, updateTask } = useContext(GlobalContext);
+    const { tasks, removeTask, updateTask, dateFormat } = useContext(GlobalContext);
     const { id } = useParams();
     const navigate = useNavigate();
 
     // Modal
     const [isOpen, setIsOpen] = useState(false);
     const [isOpenUpdate, setIsOpenUpdate] = useState(false);
+
+
 
 
     const task = tasks.find(e => e.id === parseInt(id));
@@ -61,7 +63,7 @@ export default function TaskDetail() {
                 <h2>{task.title}</h2>
                 <p>{task.description}</p>
                 <p>Stato: <span style={statusStyle}>{task.status}</span> </p>
-                <p>Creato: {new Date(task.createdAt).toLocaleDateString()}</p>
+                <p>Creato: {dateFormat}</p>
                 <div style={{ display: "flex", gap: "20px" }}>
                     <button type="button" onClick={() => setIsOpen(true)} style={{ backgroundColor: '#fa450d' }}>Elimina Task</button>
                     <button type="button" onClick={() => setIsOpenUpdate(true)} style={{ backgroundColor: '#ecae4f' }}>Modifica Task</button>
